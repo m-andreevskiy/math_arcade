@@ -31,21 +31,21 @@ public class CameraController : MonoBehaviour
         targetPanPosition = transform.position;
         if (target.position.x < minX)
         {
-            targetPanPosition.x = target.position.x ;
+            targetPanPosition.x = target.position.x+deadZoneSize.x/2 ;
         }
         else if (target.position.x > maxX)
         {
-            targetPanPosition.x = target.position.x ;
+            targetPanPosition.x = target.position.x - deadZoneSize.x/2;
         }
 
 
         if (target.position.y < minY)
         {
-            targetPanPosition.y = target.position.y ;
+            targetPanPosition.y = target.position.y + deadZoneSize.y/2;
         }
         else if (target.position.y > maxY)
         {
-            targetPanPosition.y = target.position.y ;
+            targetPanPosition.y = target.position.y - deadZoneSize.y/2 ;
         }
 
 
