@@ -1,41 +1,54 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject player;
-    [SerializeField]
-    private Vector3 offset = new Vector3(-10, 10, 0);
-    [SerializeField]
-    private float speedOfCamera = 2.0f;
-    private Vector3 off;
-    private bool atCenter = true;
+
+    [Header("Target")]
+    [SerializeField] private Transform target; // The player to follow
+
+    [Header("Settings")]
+    [SerializeField] private Vector2 deadZoneSize; // The size of the window where the camera doesn't move
+    [SerializeField] private float smoothSpeed = 5f; // How fast the camera follows
+
+    private Vector3 targetPanPosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        off = (player.transform.position + offset - transform.position);
-        if (atCenter)
-        {
-            if (off.magnitude > 3)
-            {
-                atCenter = false;
+        if (target == null) return;
 
-            }
-        }
-        else
+        // Calculate the boundaries of the dead zone based on the camera's current position
+        float minX = transform.position.x - deadZoneSize.x / 2;
+        float maxX = transform.position.x + deadZoneSize.x / 2;
+        float minY = transform.position.y - (deadZoneSize.y / 6);
+        float maxY = transform.position.y + (deadZoneSize.y / 6)*5;
+
+        targetPanPosition = transform.position;
+        if (target.position.x < minX)
         {
-            if (off.magnitude > 0.5)
-            {
-                transform.position += speedOfCamera * Time.deltaTime * off;
-            }
-            else { atCenter = true; }
-            //transform.position = player.transform.position + offset;
+            targetPanPosition.x = target.position.x ;
         }
+        else if (target.position.x > maxX)
+        {
+            targetPanPosition.x = target.position.x ;
+        }
+
+
+        if (target.position.y < minY)
+        {
+            targetPanPosition.y = target.position.y ;
+        }
+        else if (target.position.y > maxY)
+        {
+            targetPanPosition.y = target.position.y ;
+        }
+
+
+        transform.position = Vector3.Lerp(transform.position, targetPanPosition, smoothSpeed * Time.deltaTime);
     }
 }

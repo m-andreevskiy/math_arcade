@@ -17,7 +17,7 @@ public class GroundCheck : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.CompareTag("Ground"));
+    
         if (collision.CompareTag("Ground"))
         {
             controller.onGround = true;
@@ -28,7 +28,6 @@ public class GroundCheck : MonoBehaviour
     {
         if (collision.CompareTag("Ground"))
         {
-            Debug.Log("Out");
             controller.onGround = false;
             
         }

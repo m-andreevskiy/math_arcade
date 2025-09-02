@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,6 +12,7 @@ public class PlayerController : Moveable
     public bool onGround = true;
     public bool couldJumpInJump = true;
     private bool isFacingRight = true;
+    public static event Action action;
 
     [Header("Dashing")]
     [SerializeField] 
@@ -54,6 +56,12 @@ public class PlayerController : Moveable
         { 
             isFacingRight = true;
         }
+    }
+
+    public void OnInteract(InputValue playerInput)
+    {
+        Debug.Log("action");
+        action?.Invoke();
     }
     public void OnSprint(InputValue playerInput)
     {
@@ -116,7 +124,8 @@ public class PlayerController : Moveable
                 couldJumpInJump = false;
             }
         }
-            Debug.Log(jumpingCoeficient);
+     
+
     }
 
     public void Jump(float jumpImpulse) 
