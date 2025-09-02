@@ -9,7 +9,8 @@ public class CameraController : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private Vector2 deadZoneSize; // The size of the window where the camera doesn't move
-    [SerializeField] private float smoothSpeed = 5f; // How fast the camera follows
+    [SerializeField] private float smoothSpeed = 5f;
+ // How fast the camera follows
 
     private Vector3 targetPanPosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -28,27 +29,25 @@ public class CameraController : MonoBehaviour
         float minY = transform.position.y - (deadZoneSize.y / 6);
         float maxY = transform.position.y + (deadZoneSize.y / 6)*5;
 
-        targetPanPosition = transform.position;
-        if (target.position.x < minX)
-        {
-            targetPanPosition.x = target.position.x+deadZoneSize.x/2 ;
-        }
-        else if (target.position.x > maxX)
-        {
-            targetPanPosition.x = target.position.x - deadZoneSize.x/2;
-        }
+        Vector3 targetDestination = transform.position;
 
+        // Check if the player is outside the dead zone bounds.
+        bool isOutsideDeadZone = (
+            target.position.x < minX ||
+            target.position.x > maxX ||
+            target.position.y < minY ||
+            target.position.y > maxY
+        );
 
-        if (target.position.y < minY)
+        // If the player IS outside the dead zone...
+        if (isOutsideDeadZone)
         {
-            targetPanPosition.y = target.position.y + deadZoneSize.y/2;
-        }
-        else if (target.position.y > maxY)
-        {
-            targetPanPosition.y = target.position.y - deadZoneSize.y/2 ;
+            // ...then the target destination becomes the player's position (plus any offset).
+            // This will make the camera pan to re-center the player.
+            targetDestination = new Vector3(target.position.x, target.position.y, transform.position.z);
         }
 
 
-        transform.position = Vector3.Lerp(transform.position, targetPanPosition, smoothSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, targetDestination, smoothSpeed * Time.deltaTime);
     }
 }

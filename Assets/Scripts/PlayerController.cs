@@ -27,6 +27,8 @@ public class PlayerController : Moveable
     private float dashCooldown = 1f;
     [SerializeField] 
     private TrailRenderer tr;
+    private bool hasJump = false;
+    private float jumpImp = 0f;
     void Start()
     {
         
@@ -38,6 +40,10 @@ public class PlayerController : Moveable
 
     void FixedUpdate()
     {
+        if (hasJump) {
+            Jump(jumpImp);
+            hasJump = false;
+        }
         if (isDashing)
         {
             return;
@@ -107,7 +113,9 @@ public class PlayerController : Moveable
         if (onGround == true)
         {
             rb.linearVelocityY = 0;
-            Jump(jumpingCoeficient);
+            jumpImp = jumpingCoeficient;
+            //Jump(jumpingCoeficient);
+            hasJump = true;
             onGround = false;
         }
         else
@@ -117,9 +125,15 @@ public class PlayerController : Moveable
                 if (rb.linearVelocityY > 0)
                 {
                     rb.linearVelocityY = 0.5f * rb.linearVelocityY;
-                    Jump(jumpingCoeficient);
+                    hasJump = true;
+                    jumpImp = jumpingCoeficient;
+                    //Jump(jumpingCoeficient);
                 }
-                else {Jump(Mathf.Abs(rb.linearVelocityY)*0.1f + 1.1f*jumpingCoeficient); }
+                else {
+                    hasJump = true;
+                    jumpImp = Mathf.Abs(rb.linearVelocityY) * 0.1f + 1.1f * jumpingCoeficient;
+                    //Jump(Mathf.Abs(rb.linearVelocityY)*0.1f + 1.1f*jumpingCoeficient);
+                    }
                     
                 couldJumpInJump = false;
             }
